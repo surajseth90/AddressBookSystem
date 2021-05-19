@@ -1,5 +1,6 @@
 package com.bridgelabz.addressbooksystem;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.bridgelabz.dbaddressbook.AddressBookDBService;
@@ -45,6 +46,18 @@ public class AddressBookService {
 	public boolean checkEmployeePayrollInSyncWithDB(String firstName) throws AddressBookException {
 		List<AddressBook> addressBookList = addressBookDBService.getAddressBookByFirstNameFromDB(firstName);
 		return addressBookList.get(0).equals(getAddressBook(firstName));
+	}
+	
+	public List<AddressBook> readAddressBookData(String start, String end)
+			throws AddressBookException {
+		try {
+			LocalDate startLocalDate = LocalDate.parse(start);
+			LocalDate endLocalDate = LocalDate.parse(end);
+				return addressBookDBService.readData(startLocalDate, endLocalDate);
+		} catch (AddressBookException e) {
+			e.printStackTrace();
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to fetch data!!");
+		}
 	}
 
 	public static void main(String[] args) throws AddressBookException {
