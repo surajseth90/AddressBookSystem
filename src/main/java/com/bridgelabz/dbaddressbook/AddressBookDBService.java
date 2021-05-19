@@ -2,6 +2,7 @@ package com.bridgelabz.dbaddressbook;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +15,7 @@ import com.bridgelabz.exceptionaddressbooksystem.AddressBookException;
 public class AddressBookDBService {
 	List<AddressBook> addressBookList;
 	private static AddressBookDBService addressBookDBService;
+	private PreparedStatement preparedStatement;
 
 	private AddressBookDBService() {
 	}
@@ -36,13 +38,11 @@ public class AddressBookDBService {
 	}
 
 	public List<AddressBook> readData() throws AddressBookException {
-		addressBookList = new ArrayList<AddressBook>();
 		String sql = "SELECT * FROM address_book; ";
 		return this.getDataFromDB(sql);
 	}
 
 	private List<AddressBook> getDataFromDB(String sql) throws AddressBookException {
-		addressBookList = new ArrayList<AddressBook>();
 		try {
 			Connection connection = this.getConnection();
 			Statement statement = connection.createStatement();
@@ -51,7 +51,7 @@ public class AddressBookDBService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new AddressBookException(AddressBookException.AddressBookExceptionType.READ_DATA_EXCEPTION,
-					"!!Unable to read data from database!!");
+					"!!Unable to retrive data from database!!");
 		}
 		return addressBookList;
 	}
@@ -77,5 +77,78 @@ public class AddressBookDBService {
 					"!!Unable to read data from database!!");
 		}
 		return addressBookList;
+	}
+
+	public List<AddressBook> getAddressBookByFirstNameFromDB(String firstName) throws AddressBookException {
+		List<AddressBook> addressBookList = new ArrayList<>();
+		if (this.preparedStatement == null) {
+			this.preparedStatementForRetrieveDataUsingFirstName();
+		}
+		try {
+			preparedStatement.setString(1, firstName);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				String firstname = resultSet.getString("first_name");
+				String lastName = resultSet.getString("last_name");
+				String address = resultSet.getString("address");
+				String city = resultSet.getString("city");
+				String state = resultSet.getString("state");
+				int zip = resultSet.getInt("zip");
+				String phoneNumber = resultSet.getString("phone_number");
+				String email = resultSet.getString("Email");
+				addressBookList
+						.add(new AddressBook(firstname, lastName, address, city, state, phoneNumber, email, zip));
+			}
+			return addressBookList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.READ_DATA_EXCEPTION,
+					"!!Unable to read data from database!!");
+		}
+	}
+
+	private void preparedStatementForRetrieveDataUsingFirstName() {
+		try {
+			Connection connection = this.getConnection();
+			String sql = "SELECT * FROM address_book WHERE first_name=?";
+			this.preparedStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int updateAddressBookUsingPreparedStatement(String address, String state, String city, int zip, String phone,
+			String email, String first_name) throws AddressBookException {
+		if (this.preparedStatement == null) {
+			this.prepareStatementForUpdateAddressBook();
+		}
+		try {
+			preparedStatement.setString(1, address);
+			preparedStatement.setString(2, state);
+			preparedStatement.setString(3, city);
+			preparedStatement.setInt(4, zip);
+			preparedStatement.setString(5, phone);
+			preparedStatement.setString(6, email);
+			preparedStatement.setString(7, first_name);
+			int rowsAffected = preparedStatement.executeUpdate();
+			return rowsAffected;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.UPDATION_EXCEPTION,
+					"Unable to update database!!");
+		}
+	}
+
+	private void prepareStatementForUpdateAddressBook() throws AddressBookException {
+		try {
+			Connection connection = this.getConnection();
+			String sql = "UPDATE address_book SET address=?,state=?,city=?,zip=?,phone_number=?,email=? WHERE first_name=?";
+			this.preparedStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.UPDATION_EXCEPTION,
+					"Unable to update database!!");
+		}
+
 	}
 }

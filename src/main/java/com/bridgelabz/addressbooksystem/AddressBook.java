@@ -6,13 +6,12 @@ public class AddressBook {
 	private String address;
 	private String city;
 	private String state;
-	private int zip ;
+	private int zip;
 	private String phoneNumber;
-	private String email;	
-	 
-	
-	public AddressBook(String firstName ,String lastName ,String address, String city,
-			          String state,String phoneNumber,String email,int zip) {
+	private String email;
+
+	public AddressBook(String firstName, String lastName, String address, String city, String state, String phoneNumber,
+			String email, int zip) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -22,11 +21,11 @@ public class AddressBook {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.zip = zip;
-		
+
 	}
 
 	public String getFirstName() {
-		return firstName;	
+		return firstName;
 	}
 
 	public void setFirstName(String firstName) {
@@ -88,9 +87,9 @@ public class AddressBook {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getName() {
-		return firstName+" " +lastName;
+		return firstName + " " + lastName;
 	}
 
 	@Override
@@ -98,6 +97,6 @@ public class AddressBook {
 		return "AddressBook [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city="
 				+ city + ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email
 				+ "]";
-	} 
+	}
 
 }

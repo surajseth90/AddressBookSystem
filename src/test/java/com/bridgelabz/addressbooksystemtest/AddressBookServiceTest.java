@@ -10,12 +10,20 @@ import com.bridgelabz.addressbooksystem.AddressBookService;
 import com.bridgelabz.exceptionaddressbooksystem.AddressBookException;
 
 public class AddressBookServiceTest {
-	AddressBookService addressBookService = new AddressBookService(); 
+	AddressBookService addressBookService = new AddressBookService();
 	List<AddressBook> addressBookList;
-	
+
 	@Test
 	public void givenAddressBook_WhenRetrived_ShouldReturnAddressBookSize() throws AddressBookException {
 		addressBookList = addressBookService.readAddressBookData();
-		Assert.assertEquals(3, addressBookList.size());		
+		Assert.assertEquals(3, addressBookList.size());
+	}
+
+	@Test
+	public void givenAddressBook_WhenUpdate_ShouldSYNCWithDataBase() throws AddressBookException {
+		addressBookService.updateAddressBookUsingPrepareStatement("Nodia", "UP", "Noida", 000000, "9234567890",
+				"suraj@gmail.com", "Suraj");
+		boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Suraj");
+		Assert.assertTrue(result);
 	}
 }
