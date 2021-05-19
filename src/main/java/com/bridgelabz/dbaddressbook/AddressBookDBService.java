@@ -171,4 +171,19 @@ public class AddressBookDBService {
 		}
 		return addressBookList;
 	}
+	
+	public int countDataByStateOrCity(String select, String name) throws AddressBookException {
+		int count = 0;
+		String query = String.format("SELECT COUNT(first_Name) FROM address_book where %s = '%s';", select,name);
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			while(resultSet.next()) {
+			count = resultSet.getInt("COUNT(first_name)");
+			}
+		} catch (SQLException e) {
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to fetch data!!");
+		}
+		return count;
+	}
 }

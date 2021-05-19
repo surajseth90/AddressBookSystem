@@ -59,11 +59,10 @@ public class AddressBookService {
 			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to fetch data!!");
 		}
 	}
-
-	public static void main(String[] args) throws AddressBookException {
-		AddressBookService addressBookService = new AddressBookService();
-		System.out.println(addressBookService.checkEmployeePayrollInSyncWithDB("Suraj"));
-		System.out.println(addressBookService.getAddressBook("Suraj"));
-		System.out.println(addressBookDBService.getAddressBookByFirstNameFromDB("Suraj"));
+	
+	public int countDataByStateOrCity(String select, String name) throws AddressBookException {
+		return addressBookDBService.countDataByStateOrCity(select, name);
 	}
+
+	
 }

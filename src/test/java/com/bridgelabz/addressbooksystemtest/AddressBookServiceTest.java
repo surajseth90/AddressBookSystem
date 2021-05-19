@@ -26,4 +26,9 @@ public class AddressBookServiceTest {
 		boolean result = addressBookService.checkEmployeePayrollInSyncWithDB("Suraj");
 		Assert.assertTrue(result);
 	}
+	
+	@Test
+	public void givenAddresBook_WhenRetrieved_ShouldReturnCountOfCity() throws AddressBookException {
+		Assert.assertEquals(1, addressBookService.readAddressBookData("city", "delhi"));
+	}
 }
