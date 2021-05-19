@@ -7,18 +7,19 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class JsonFileOfAddessBook {
 	private static final String CSV_PATH = "C:\\Users\\ASUS\\eclipse-workspace\\PP4 AddressBookSystem\\src\\main\\java\\com\\"
 			+ "bridgelabz\\addressbooksystem-AddressBook_CSV_File.csv";
-	private static final String JSON_PATH = "C:\\Users\\ASUS\\eclipse-workspace\\PP4 AddressBookSystem\\src\\main\\java\com"
-														+ "\\bridgelabz\\addressbooksystem-AddressBook_Json_File.json" ;
+	private static final String JSON_PATH = "C:\\Users\\ASUS\\eclipse-workspace\\PP4 AddressBookSystem\\src\\main\\java\\com\\"
+			+ "bridgelabz\\addressbooksystem-AddressBook_Json_File.json" ;
 
 	public static void main(String[] args) {
 		try {
@@ -28,7 +29,7 @@ public class JsonFileOfAddessBook {
 					.withIgnoreLeadingWhiteSpace(true).build();
 			List<AddressBook> addressBook = csvToBean.parse();
 			Gson gson = new Gson();
-			String json = gson.toJson(AddressBook);
+			String json = gson.toJson(addressBook);
 			FileWriter writer = new FileWriter(JSON_PATH);
 			writer.write(json);
 			writer.close();

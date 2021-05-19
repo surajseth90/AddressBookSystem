@@ -91,6 +91,13 @@ public class AddressBook {
 	
 	public String getName() {
 		return firstName+" " +lastName;
+	}
+
+	@Override
+	public String toString() {
+		return "AddressBook [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city="
+				+ city + ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email
+				+ "]";
 	} 
 
 }
