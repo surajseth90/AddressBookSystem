@@ -47,26 +47,30 @@ public class AddressBookService {
 		List<AddressBook> addressBookList = addressBookDBService.getAddressBookByFirstNameFromDB(firstName);
 		return addressBookList.get(0).equals(getAddressBook(firstName));
 	}
-	
-	public List<AddressBook> readAddressBookData(String start, String end)
-			throws AddressBookException {
+
+	public List<AddressBook> readAddressBookData(String start, String end) throws AddressBookException {
 		try {
 			LocalDate startLocalDate = LocalDate.parse(start);
 			LocalDate endLocalDate = LocalDate.parse(end);
-				return addressBookDBService.readData(startLocalDate, endLocalDate);
+			return addressBookDBService.readData(startLocalDate, endLocalDate);
 		} catch (AddressBookException e) {
 			e.printStackTrace();
-			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to fetch data!!");
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,
+					"Unable to fetch data!!");
 		}
 	}
-	
+
 	public int countDataByStateOrCity(String select, String name) throws AddressBookException {
 		return addressBookDBService.countDataByStateOrCity(select, name);
 	}
 
-	public void addNewContact(String firstName, String lastName, String start, String address, String city, String state, int zip,
-			String phoneNo, String email) throws AddressBookException {
-		addressBookList.add(addressBookDBService.addNewContact(firstName, lastName, start, address, city, state, zip, phoneNo,
-				email));
+	public void addNewContact(String firstName, String lastName, String start, String address, String city,
+			String state, int zip, String phoneNo, String email) throws AddressBookException {
+		addressBookList.add(addressBookDBService.addNewContact(firstName, lastName, start, address, city, state, zip,
+				phoneNo, email));
+	}
+
+	public void addMultipleContactsToDBUsingThreads(List<AddressBook> arrayList) {
+		addressBookDBService.addMultipleContactsToDBUsingThread(arrayList);
 	}
 }

@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.bridgelabz.addressbooksystem.AddressBook;
 import com.bridgelabz.exceptionaddressbooksystem.AddressBookException;
@@ -42,7 +44,7 @@ public class AddressBookDBService {
 		String sql = "SELECT * FROM address_book; ";
 		return this.getDataFromDB(sql);
 	}
-	
+
 	private List<AddressBook> getAddressBookDetails(ResultSet resultSet) throws AddressBookException {
 		List<AddressBook> addressBookData = new ArrayList<>();
 		try {
@@ -60,12 +62,12 @@ public class AddressBookDBService {
 						.add(new AddressBook(firstName, lastName, start, address, city, state, zip, phoneNo, email));
 			}
 		} catch (SQLException e) {
-			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to retrieve data");
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,
+					"Unable to retrieve data");
 		}
 		return addressBookData;
 	}
 
-	
 	private List<AddressBook> getDataFromDB(String sql) throws AddressBookException {
 		try {
 			Connection connection = this.getConnection();
@@ -80,7 +82,6 @@ public class AddressBookDBService {
 		return addressBookList;
 	}
 
-	
 	public List<AddressBook> getAddressBookByFirstNameFromDB(String firstName) throws AddressBookException {
 		List<AddressBook> addressBookList = new ArrayList<>();
 		if (this.preparedStatement == null) {
@@ -172,25 +173,25 @@ public class AddressBookDBService {
 		}
 		return addressBookList;
 	}
-	
+
 	public int countDataByStateOrCity(String select, String name) throws AddressBookException {
 		int count = 0;
-		String query = String.format("SELECT COUNT(first_Name) FROM address_book where %s = '%s';", select,name);
+		String query = String.format("SELECT COUNT(first_Name) FROM address_book where %s = '%s';", select, name);
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(query);
-			while(resultSet.next()) {
-			count = resultSet.getInt("COUNT(first_name)");
+			while (resultSet.next()) {
+				count = resultSet.getInt("COUNT(first_name)");
 			}
 		} catch (SQLException e) {
-			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to fetch data!!");
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,
+					"Unable to fetch data!!");
 		}
 		return count;
 	}
-	
-	
-	public AddressBook addNewContact(String firstName, String lastName, String start, String address, String city, String state,
-			int zip, String phoneNo, String email) throws AddressBookException {
+
+	public AddressBook addNewContact(String firstName, String lastName, String start, String address, String city,
+			String state, int zip, String phoneNo, String email) throws AddressBookException {
 		int id = -1;
 		AddressBook addressBookData = null;
 		String query = String.format(
@@ -206,9 +207,38 @@ public class AddressBookDBService {
 			}
 			addressBookData = new AddressBook(firstName, lastName, start, address, city, state, zip, phoneNo, email);
 		} catch (SQLException e) {
-			throw new AddressBookException(AddressBookException.AddressBookExceptionType.ADD_CONTACT_EXCEPTION,"Unable to add employee!!");
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.ADD_CONTACT_EXCEPTION,
+					"Unable to add employee!!");
 		}
 		return addressBookData;
+	}
+
+	public void addMultipleContactsToDBUsingThread(List<AddressBook> record) {
+		Map<Integer, Boolean> addressAdditionStatus = new HashMap<Integer, Boolean>();
+		record.forEach(addressbookdata -> {
+			Runnable task = () -> {
+				addressAdditionStatus.put(addressbookdata.hashCode(), false);
+				System.out.println("Contact Being Added:" + Thread.currentThread().getName());
+				try {
+					this.addNewContact(addressbookdata.getFirstName(), addressbookdata.getLastName(),
+							addressbookdata.getStart(), addressbookdata.getAddress(), addressbookdata.getCity(),
+							addressbookdata.getState(), addressbookdata.getZip(), addressbookdata.getPhoneNumber(),
+							addressbookdata.getEmail());
+				} catch (AddressBookException e) {
+					e.printStackTrace();
+				}
+				addressAdditionStatus.put(addressbookdata.hashCode(), true);
+				System.out.println("Contact Added:" + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, addressbookdata.getFirstName());
+			thread.start();
+		});
+		while (addressAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 
 }
