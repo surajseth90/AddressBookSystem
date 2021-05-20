@@ -3,6 +3,7 @@ package com.bridgelabz.addressbooksystem;
 public class AddressBook {
 	private String firstName;
 	private String lastName;
+	private String start;
 	private String address;
 	private String city;
 	private String state;
@@ -24,6 +25,20 @@ public class AddressBook {
 
 	}
 
+	public AddressBook(String firstName, String lastName, String start, String address, String city, String state,
+			int zip, String phoneNumber, String email) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.start = start;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -42,6 +57,14 @@ public class AddressBook {
 
 	public String getAddress() {
 		return address;
+	}
+
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
 	}
 
 	public void setAddress(String address) {
@@ -94,9 +117,9 @@ public class AddressBook {
 
 	@Override
 	public String toString() {
-		return "AddressBook [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city="
-				+ city + ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber + ", email=" + email
-				+ "]";
+		return "AddressBook [firstName=" + firstName + ", lastName=" + lastName + ", start=" + start + ", address="
+				+ address + ", city=" + city + ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber
+				+ ", email=" + email + "]";
 	}
 
 	@Override
@@ -133,6 +156,11 @@ public class AddressBook {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
 		if (phoneNumber == null) {
 			if (other.phoneNumber != null)
 				return false;
@@ -145,6 +173,5 @@ public class AddressBook {
 			return false;
 		return true;
 	}
-	
 
 }

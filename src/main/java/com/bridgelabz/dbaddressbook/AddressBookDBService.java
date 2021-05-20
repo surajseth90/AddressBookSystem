@@ -42,13 +42,36 @@ public class AddressBookDBService {
 		String sql = "SELECT * FROM address_book; ";
 		return this.getDataFromDB(sql);
 	}
+	
+	private List<AddressBook> getAddressBookDetails(ResultSet resultSet) throws AddressBookException {
+		List<AddressBook> addressBookData = new ArrayList<>();
+		try {
+			while (resultSet.next()) {
+				String firstName = resultSet.getString("FirstName");
+				String lastName = resultSet.getString("LastName");
+				String start = resultSet.getString("Start");
+				String address = resultSet.getString("Address");
+				String city = resultSet.getString("City");
+				String state = resultSet.getString("State");
+				int zip = resultSet.getInt("Zip");
+				String phoneNo = resultSet.getString("PhoneNo");
+				String email = resultSet.getString("Email");
+				addressBookData
+						.add(new AddressBook(firstName, lastName, start, address, city, state, zip, phoneNo, email));
+			}
+		} catch (SQLException e) {
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,"Unable to retrieve data");
+		}
+		return addressBookData;
+	}
 
+	
 	private List<AddressBook> getDataFromDB(String sql) throws AddressBookException {
 		try {
 			Connection connection = this.getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
-			addressBookList = this.getAddressBookData(resultSet);
+			addressBookList = this.getAddressBookDetails(resultSet);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new AddressBookException(AddressBookException.AddressBookExceptionType.READ_DATA_EXCEPTION,
@@ -57,29 +80,7 @@ public class AddressBookDBService {
 		return addressBookList;
 	}
 
-	private List<AddressBook> getAddressBookData(ResultSet resultSet) throws AddressBookException {
-		addressBookList = new ArrayList<AddressBook>();
-		try {
-			while (resultSet.next()) {
-				String firstName = resultSet.getString("first_name");
-				String lastName = resultSet.getString("last_name");
-				String address = resultSet.getString("address");
-				String city = resultSet.getString("city");
-				String state = resultSet.getString("state");
-				int zip = resultSet.getInt("zip");
-				String phoneNumber = resultSet.getString("phone_number");
-				String email = resultSet.getString("Email");
-				addressBookList
-						.add(new AddressBook(firstName, lastName, address, city, state, phoneNumber, email, zip));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new AddressBookException(AddressBookException.AddressBookExceptionType.READ_DATA_EXCEPTION,
-					"!!Unable to read data from database!!");
-		}
-		return addressBookList;
-	}
-
+	
 	public List<AddressBook> getAddressBookByFirstNameFromDB(String firstName) throws AddressBookException {
 		List<AddressBook> addressBookList = new ArrayList<>();
 		if (this.preparedStatement == null) {
@@ -163,7 +164,7 @@ public class AddressBookDBService {
 		try (Connection con = this.getConnection();) {
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(query);
-			addressBookList = this.getAddressBookData(rs);
+			addressBookList = this.getAddressBookDetails(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new AddressBookException(AddressBookException.AddressBookExceptionType.DATABASE_EXCEPTION,
@@ -186,4 +187,28 @@ public class AddressBookDBService {
 		}
 		return count;
 	}
+	
+	
+	public AddressBook addNewContact(String firstName, String lastName, String start, String address, String city, String state,
+			int zip, String phoneNo, String email) throws AddressBookException {
+		int id = -1;
+		AddressBook addressBookData = null;
+		String query = String.format(
+				"insert into addressBook(FirstName, LastName, Date, Address, City, State, Zip, PhoneNo, Email) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')",
+				firstName, lastName, start, address, city, state, zip, phoneNo, email);
+		try (Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			int rowChanged = statement.executeUpdate(query, statement.RETURN_GENERATED_KEYS);
+			if (rowChanged == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if (resultSet.next())
+					id = resultSet.getInt(1);
+			}
+			addressBookData = new AddressBook(firstName, lastName, start, address, city, state, zip, phoneNo, email);
+		} catch (SQLException e) {
+			throw new AddressBookException(AddressBookException.AddressBookExceptionType.ADD_CONTACT_EXCEPTION,"Unable to add employee!!");
+		}
+		return addressBookData;
+	}
+
 }

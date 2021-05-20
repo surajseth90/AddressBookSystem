@@ -64,5 +64,9 @@ public class AddressBookService {
 		return addressBookDBService.countDataByStateOrCity(select, name);
 	}
 
-	
+	public void addNewContact(String firstName, String lastName, String start, String address, String city, String state, int zip,
+			String phoneNo, String email) throws AddressBookException {
+		addressBookList.add(addressBookDBService.addNewContact(firstName, lastName, start, address, city, state, zip, phoneNo,
+				email));
+	}
 }
