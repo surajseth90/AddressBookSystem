@@ -39,6 +39,11 @@ public class AddressBook {
 		this.email = email;
 	}
 
+	public AddressBook(String string, String string2, String string3, String string4, String string5, int i,
+			String string6, String string7, String string8) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}

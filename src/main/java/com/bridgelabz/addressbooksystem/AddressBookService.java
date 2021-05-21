@@ -1,6 +1,7 @@
 package com.bridgelabz.addressbooksystem;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bridgelabz.dbaddressbook.AddressBookDBService;
@@ -10,9 +11,17 @@ public class AddressBookService {
 
 	List<AddressBook> addressBookList;
 	private static AddressBookDBService addressBookDBService;
+	
+	public enum IOService {
+		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
+	}
 
 	public AddressBookService() {
 		addressBookDBService = AddressBookDBService.getInstance();
+	}
+
+	public AddressBookService(List<AddressBook> asList) {
+		this.addressBookList = new ArrayList<> (asList);
 	}
 
 	public List<AddressBook> readAddressBookData() throws AddressBookException {
@@ -72,5 +81,12 @@ public class AddressBookService {
 
 	public void addMultipleContactsToDBUsingThreads(List<AddressBook> arrayList) {
 		addressBookDBService.addMultipleContactsToDBUsingThread(arrayList);
+	}
+	
+	public long countEntries(IOService service) {
+		if(service.equals(IOService.REST_IO))
+			 return addressBookList.size();
+		return 0;
+		
 	}
 }
