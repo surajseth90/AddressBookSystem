@@ -1,6 +1,7 @@
 package com.bridgelabz.addressbooksystem;
 
 public class AddressBook {
+	private int id;
 	private String firstName;
 	private String lastName;
 	private String start;
@@ -44,6 +45,14 @@ public class AddressBook {
 		// TODO Auto-generated constructor stub
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
@@ -126,6 +135,9 @@ public class AddressBook {
 				+ address + ", city=" + city + ", state=" + state + ", zip=" + zip + ", phoneNumber=" + phoneNumber
 				+ ", email=" + email + "]";
 	}
+
+	
+	
 
 	@Override
 	public boolean equals(Object obj) {

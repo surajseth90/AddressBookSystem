@@ -22,7 +22,7 @@ public class JSONServerTest {
 	}
 
 	public AddressBook[] getAddressBook() {
-		Response response = RestAssured.get("/AddressBook_Json_File.json");
+		Response response = RestAssured.get("/AddressBook");
 		System.out.println("AddressBook entries in json server :\n" + response.asString());
 		AddressBook[] arrayOfAddressBook = new Gson().fromJson(response.asString(), AddressBook[].class);
 		return arrayOfAddressBook;
