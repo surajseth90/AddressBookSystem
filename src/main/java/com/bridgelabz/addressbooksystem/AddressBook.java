@@ -40,9 +40,18 @@ public class AddressBook {
 		this.email = email;
 	}
 
-	public AddressBook(String string, String string2, String string3, String string4, String string5, int i,
-			String string6, String string7, String string8) {
-		// TODO Auto-generated constructor stub
+	public AddressBook(int id,String firstName, String lastName, String start, String address, String city, String state,
+			int zip, String phoneNumber, String email) {
+		this.id=id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.start = start;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zip = zip;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
 	}
 
 	public int getId() {

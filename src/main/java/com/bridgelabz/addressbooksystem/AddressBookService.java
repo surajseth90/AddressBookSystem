@@ -11,7 +11,7 @@ public class AddressBookService {
 
 	List<AddressBook> addressBookList;
 	private static AddressBookDBService addressBookDBService;
-	
+
 	public enum IOService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	}
@@ -21,7 +21,7 @@ public class AddressBookService {
 	}
 
 	public AddressBookService(List<AddressBook> asList) {
-		this.addressBookList = new ArrayList<> (asList);
+		this.addressBookList = new ArrayList<>(asList);
 	}
 
 	public List<AddressBook> readAddressBookData() throws AddressBookException {
@@ -82,11 +82,16 @@ public class AddressBookService {
 	public void addMultipleContactsToDBUsingThreads(List<AddressBook> arrayList) {
 		addressBookDBService.addMultipleContactsToDBUsingThread(arrayList);
 	}
-	
+
 	public long countEntries(IOService service) {
-		if(service.equals(IOService.REST_IO))
-			 return addressBookList.size();
+		if (service.equals(IOService.REST_IO))
+			return addressBookList.size();
 		return 0;
-		
+
 	}
+
+	public void addContactToAddressBook(AddressBook addressBookData, IOService restIo) {
+		addressBookList.add(addressBookData);
+	}
+
 }

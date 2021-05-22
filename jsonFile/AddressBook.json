@@ -1,0 +1,16 @@
+{
+  "addresBook": [
+    {
+      "id": 1,
+      "firstName": "suraj",
+      "lastName": "gupta",
+      "startDate": "2021/05/07",
+      "address": "badoni",
+      "city": "datia",
+      "state": "MP",
+      "zip": 123468,
+      "phoneNumber": "1234567890",
+      "email": "abc@gmail.com"
+    }
+  ]
+}
