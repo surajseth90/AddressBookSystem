@@ -29,7 +29,7 @@ public class JSONServerTest {
 		return arrayOfAddressBook;
 
 	}
-	
+
 	private Response addContactToJsonServer(AddressBook addressBookData) {
 		String addressBookJson = new Gson().toJson(addressBookData);
 		RequestSpecification request = RestAssured.given();
@@ -54,8 +54,10 @@ public class JSONServerTest {
 		AddressBookService addressBookService;
 		addressBookService = new AddressBookService(Arrays.asList(arrayOfAddressBook));
 		AddressBook[] arrayOfPersonPayroll = {
-				new AddressBook(2, "Purvi", "Gupta", "2020-09-16","badoni","Datia","MP", 475686, "8770959691", "purvi@gmail.com"),
-				new AddressBook(3, "Rahul", "Kushwaha", "2020-12-16","kur","datia","mp", 475686, "7389423474", "rahul@gmail.com") };
+				new AddressBook(2, "Purvi", "Gupta", "2020-09-16", "badoni", "Datia", "MP", 475686, "8770959691",
+						"purvi@gmail.com"),
+				new AddressBook(3, "Rahul", "Kushwaha", "2020-12-16", "kur", "datia", "mp", 475686, "7389423474",
+						"rahul@gmail.com") };
 
 		for (AddressBook addressBookData : arrayOfPersonPayroll) {
 
@@ -69,7 +71,7 @@ public class JSONServerTest {
 		long entries = addressBookService.countEntries(IOService.REST_IO);
 		Assert.assertEquals(3, entries);
 	}
-	
+
 	@Test
 	public void givenCity_WhenUpdated_ShouldMatch200response() {
 		AddressBook[] arrayOfAddressBook = getAddressBook();
@@ -85,5 +87,22 @@ public class JSONServerTest {
 		Response response = request.put("/Addressbook/" + addressBookData.getId());
 		int statusCode = response.getStatusCode();
 		Assert.assertEquals(200, statusCode);
+	}
+
+	@Test
+	public void givenContactDetails_WhenDeleted_ShouldMatch200ResponseAndCount() {
+		AddressBook[] arrayOfAddressBook = getAddressBook();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfAddressBook));
+		AddressBook addressBookData = addressBookService.getAddressBookData("Purvi");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/addressbook/" + addressBookData.getId());
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+
+		addressBookService.deleteContactPayroll(addressBookData.getFirstName(), IOService.REST_IO);
+		long entries = addressBookService.countEntries(IOService.REST_IO);
+		Assert.assertEquals(3, entries);
 	}
 }

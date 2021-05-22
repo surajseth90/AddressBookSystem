@@ -107,4 +107,9 @@ public class AddressBookService {
 			addressBookData.setCity(city);
 
 	}
+
+	public void deleteContactPayroll(String firstName, IOService ioService) {
+		AddressBook addressBookData = this.getAddressBookData(firstName);
+		addressBookList.remove(addressBookData);
+	}
 }
