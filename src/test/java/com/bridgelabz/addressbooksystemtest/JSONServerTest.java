@@ -69,4 +69,21 @@ public class JSONServerTest {
 		long entries = addressBookService.countEntries(IOService.REST_IO);
 		Assert.assertEquals(3, entries);
 	}
+	
+	@Test
+	public void givenCity_WhenUpdated_ShouldMatch200response() {
+		AddressBook[] arrayOfAddressBook = getAddressBook();
+		AddressBookService addressBookService;
+		addressBookService = new AddressBookService(Arrays.asList(arrayOfAddressBook));
+		addressBookService.updateContactCity("Suraj", "Noida", IOService.REST_IO);
+		AddressBook addressBookData = addressBookService.getAddressBookData("Akash");
+
+		String addJson = new Gson().toJson(addressBookData);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(addJson);
+		Response response = request.put("/Addressbook/" + addressBookData.getId());
+		int statusCode = response.getStatusCode();
+		Assert.assertEquals(200, statusCode);
+	}
 }

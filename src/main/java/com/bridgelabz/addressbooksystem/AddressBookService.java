@@ -94,4 +94,17 @@ public class AddressBookService {
 		addressBookList.add(addressBookData);
 	}
 
+	public AddressBook getAddressBookData(String firstName) {
+		AddressBook addressBookData;
+		addressBookData = this.addressBookList.stream().filter(dataItem -> dataItem.getFirstName().equals(firstName))
+				.findFirst().orElse(null);
+		return addressBookData;
+	}
+
+	public void updateContactCity(String firstName, String city, IOService restIo) {
+		AddressBook addressBookData = this.getAddressBookData(firstName);
+		if (addressBookData != null)
+			addressBookData.setCity(city);
+
+	}
 }
